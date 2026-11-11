@@ -1,1 +1,1 @@
-Website for construction business, with SQLite database for contact form + admin page(with LogIn), where you can edit database.
+Website for construction company, with SQLite database for contact form + admin page(with LogIn), where you can edit database.

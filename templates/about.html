@@ -15,19 +15,32 @@ About | My Website
 <p>Thank you for visiting our website. We look forward to working with you and helping you achieve your construction,
     renovation, and maintenance goals.</p>
 <h1>Our Employees</h1>
-<ul>
+
+
+<div class="employees-grid">
 
     {% for abou in about %}
-    <p>Position: {{ abou.position }}</p>
-    <p>Age: {{ abou.age }}</p>
-    <p>Salary: ${{ abou.salary }} per hour</p>
 
-    {% if abou.salary > 2999 %}
-    <p>High salary employee</p>
-    {% else %}
-    <p>Standard salary employee</p>
-    {% endif %}
-    <hr>
+    <div class="employee-card">
+
+        <h2>{{ abou.position }}</h2>
+
+        <p>Age: {{ abou.age }}</p>
+
+        <p class="employee-salary">
+            Salary: ${{ abou.salary }} per hour
+        </p>
+
+        {% if abou.salary > 2999 %}
+        <p class="high-salary">High salary employee</p>
+        {% else %}
+        <p class="standard-salary">Standard salary employee</p>
+        {% endif %}
+
+    </div>
+
     {% endfor %}
-</ul>
+
+</div>
+
 {% endblock %}

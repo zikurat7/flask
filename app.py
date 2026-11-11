@@ -103,6 +103,18 @@ def about():
             "position": "Manager",
             "salary": 3600,
         },
+        {
+            "name": "Sarah",
+            "age": 28,
+            "position": "Consultant",
+            "salary": 2900,
+        },
+        {
+            "name": "Emma",
+            "age": 32,
+            "position": "Architect",
+            "salary": 3400,
+        },
     ]
     return render_template("about.html", user=user, prof=prof, about=about_list)
 
@@ -243,6 +255,26 @@ def services():
             "name": "Maintenance",
             "description": "Regular upkeep and repairs",
             "price": 100,
+        },
+        {
+            "name": "Inspection",
+            "description": "Thorough examination of structures",
+            "price": 120,
+        },
+        {
+            "name": "Consultation",
+            "description": "Expert advice for your projects",
+            "price": 150,
+        },
+        {
+            "name": "Design",
+            "description": "Architectural and interior design services",
+            "price": 250,
+        },
+        {
+            "name": "Project Management",
+            "description": "Overseeing and coordinating construction projects",
+            "price": 350,
         },
     ]
 

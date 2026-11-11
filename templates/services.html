@@ -4,22 +4,31 @@
 Services | My Website
 {% endblock %}
 
+
 {% block content %}
 
 <h1>Our Services</h1>
 
-<ul>
+<div class="services-grid">
+
     {% for service in services %}
 
-    {% if service.price < 3300 %} <h2>{{ service.name }}</h2>
+    {% if service.price < 3300 %} <div class="service-card">
+
+        <h2>{{ service.name }}</h2>
 
         <p>{{ service.description }}</p>
 
-        <p>Price: ${{ service.price }} per hour</p>
+        <p class="service-price">
+            Price: ${{ service.price }} per hour
+        </p>
 
-        <hr>
-        {% endif %}
-        {% endfor %}
-</ul>
+</div>
+
+{% endif %}
+
+{% endfor %}
+
+</div>
 
 {% endblock %}
