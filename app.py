@@ -1,22 +1,24 @@
-from unicodedata import name
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
-from flask import Flask, render_template, request, redirect, url_for, session
-from functools import wraps
 import sqlite3
+from functools import wraps
 
+from dotenv import load_dotenv
+from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash
 
-ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
-
-ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH")
+load_dotenv()
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
+ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH")
+
 user = "Valerii"
 age = 28
 prof = "Engineer"
+
 
 app = Flask(__name__)
 
