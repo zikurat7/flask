@@ -1,14 +1,17 @@
 from unicodedata import name
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 from flask import Flask, render_template, request, redirect, url_for, session
 from functools import wraps
 import sqlite3
 
 from werkzeug.security import check_password_hash
 
-ADMIN_USERNAME = "admin"
+ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 
-ADMIN_PASSWORD_HASH = "scrypt:32768:8:1$ekwfSTNzVMXWHVWG$0a6f9103ff8a027f5a9d77e1df4ea33a575a508b9aeefb5589dc6b930a5c358f6f759f022e7022907f794d297949d38ff76a1194291cca1797abed5fa159ca9f"
+ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH")
 
 app = Flask(__name__)
 user = "Valerii"
@@ -17,7 +20,7 @@ prof = "Engineer"
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "25426"
+app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
 
 def init_db():
