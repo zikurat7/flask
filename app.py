@@ -1,7 +1,14 @@
 from unicodedata import name
 
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session
+from functools import wraps
 import sqlite3
+
+from werkzeug.security import check_password_hash
+
+ADMIN_USERNAME = "admin"
+
+ADMIN_PASSWORD_HASH = "scrypt:32768:8:1$ekwfSTNzVMXWHVWG$0a6f9103ff8a027f5a9d77e1df4ea33a575a508b9aeefb5589dc6b930a5c358f6f759f022e7022907f794d297949d38ff76a1194291cca1797abed5fa159ca9f"
 
 app = Flask(__name__)
 user = "Valerii"
@@ -9,6 +16,8 @@ age = 28
 prof = "Engineer"
 
 app = Flask(__name__)
+
+app.config["SECRET_KEY"] = "25426"
 
 
 def init_db():
@@ -25,6 +34,40 @@ def init_db():
 
     connection.commit()
     connection.close()
+
+
+def login_required(function):
+
+    @wraps(function)
+    def wrapper(*args, **kwargs):
+
+        if not session.get("logged_in"):
+            return redirect(url_for("login"))
+
+        return function(*args, **kwargs)
+
+    return wrapper
+
+
+@app.route("/admin/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        if username == ADMIN_USERNAME and check_password_hash(
+            ADMIN_PASSWORD_HASH, password
+        ):
+
+            session["logged_in"] = True
+
+            return redirect(url_for("admin_messages"))
+
+        return "Invalid username or password", 401
+
+    return render_template("login.html")
 
 
 @app.route("/")
@@ -91,6 +134,7 @@ def contact():
 
 
 @app.route("/admin/messages")
+@login_required
 def admin_messages():
 
     connection = sqlite3.connect("messages.db")
@@ -105,6 +149,7 @@ def admin_messages():
 
 
 @app.route("/admin/messages/<int:message_id>/delete", methods=["POST"])
+@login_required
 def delete_message(message_id):
 
     connection = sqlite3.connect("messages.db")
@@ -118,6 +163,7 @@ def delete_message(message_id):
 
 
 @app.route("/admin/messages/<int:message_id>/edit", methods=["GET", "POST"])
+@login_required
 def edit_message(message_id):
 
     connection = sqlite3.connect("messages.db")
@@ -162,6 +208,15 @@ def edit_message(message_id):
 @app.route("/index")
 def index():
     return render_template("index.html", user=user, prof=prof)
+
+
+@app.route("/admin/logout", methods=["POST"])
+@login_required
+def logout():
+
+    session.clear()
+
+    return redirect(url_for("login"))
 
 
 @app.route("/services")
