@@ -1,44 +1,25 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Zikurat's Website</title>
-</head>
+{% block title %}
+Services | My Website
+{% endblock %}
 
-<body>
-    <p>This is the list of services we provide.</p>
-    <ul>
-        {% for service in services %}
-        <li>{{ service }}</li>
+{% block content %}
+
+<h1>Our Services</h1>
+
+<ul>
+    {% for service in services %}
+
+    {% if service.price < 3300 %} <h2>{{ service.name }}</h2>
+
+        <p>{{ service.description }}</p>
+
+        <p>Price: ${{ service.price }} per hour</p>
+
+        <hr>
+        {% endif %}
         {% endfor %}
-    </ul>
-    <p>List of buttons for navigation:</p>
-    <style>
-        .my-button {
-            background-color: red;
-            color: white;
-            padding: 4px 14px;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-right: 16px;
-        }
-    </style>
+</ul>
 
-    <a href="{{ url_for('home') }}" class="my-button">
-        Home
-    </a>
-
-    <a href="{{ url_for('services') }}" class="my-button">
-        Services
-    </a>
-
-    <a href="{{ url_for('about') }}" class="my-button">
-        About
-    </a>
-
-    <a href="{{ url_for('contact') }}" class="my-button">
-        Contact
-    </a>
-</body>
-
-</html>
+{% endblock %}

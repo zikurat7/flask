@@ -1,97 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-<head>
-    <meta charset="UTF-8">
-    <title>Home page</title>
+{% block title %}
+Home | My Website
+{% endblock %}
 
-    <style>
-        /* Default light mode */
-        body {
-            background-color: white;
-            color: black;
-            font-family: Arial, sans-serif;
-            transition: 0.3s;
-            padding: 0px;
-            margin-right: 0px;
-            margin-left: 25px;
-        }
+{% block content %}
+<h1>Hello! Welcome to Zikurat's Website!</h1>
+<p>You are {{ age }} years old.</p>
+<p>Your name is {{ user }}.</p>
+<p>Your profession is {{ prof }}.</p>
+{% if age >= 18 %}
+<p>You are an adult.</p>
+{% else %}
+<p>You are under 18.</p>
+{% endif %}
+<p>This is my first HTML page rendered with Flask.</p>
 
-        /* Dark mode */
-        body.dark-mode {
-            background-color: #121212;
-            color: white;
-        }
-
-        .my-button {
-            background-color: red;
-            color: white;
-            padding: 12px 24px;
-            text-decoration: none;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .button-container {
-            display: flex;
-            gap: 15px;
-        }
-
-        /* Dark mode toggle */
-        #theme-toggle {
-            background-color: #333;
-            color: white;
-            padding: 10px 18px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>Hello {{ user }} ! Welcome to Zikurat's Website!</h1>
-    <p>You are {{ age }} years old.</p>
-    {% if age >= 18 %}
-    <p>You are an adult.</p>
-    {% else %}
-    <p>You are under 18.</p>
-    {% endif %}
-    <p>This is my first HTML page rendered with Flask.</p>
-    <a href="/services">
-        <button>Our Services</button>
-    </a>
-    <a href="/contact">
-        <button>Contact Us</button>
-    </a>
-    <a href="/about">
-        <button>About Us</button>
-    </a>
-    <a href="/">
-        <button>Home</button>
-    </a>
-
-    <p>If you want to switch between light and dark mode, use the button below.</p>
-
-    <button id="theme-toggle">🌙 Dark Mode</button>
-
-    <script>
-        const themeButton = document.getElementById("theme-toggle");
-
-        themeButton.addEventListener("click", function () {
-
-            document.body.classList.toggle("dark-mode");
-
-            if (document.body.classList.contains("dark-mode")) {
-                themeButton.textContent = "☀️ Light Mode";
-            } else {
-                themeButton.textContent = "🌙 Dark Mode";
-            }
-
-        });
-    </script>
-
-</body>
-
-</html>
+{% endblock %}

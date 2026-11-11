@@ -1,25 +1,32 @@
-<!DOCTYPE html>
-<html>
+{% extends "base.html" %}
 
-<head>
-    <title>Zikurat's Website</title>
-</head>
+{% block title %}
+About | My Website
+{% endblock %}
 
-<body>
-    <h1>Hello {{ user }} ! Welcome to about page of Zikurat's Website!</h1>
-    <p>List of buttons for navigation:</p>
-    <a href="/services">
-        <button>Our Services</button>
-    </a>
-    <a href="/contact">
-        <button>Contact Us</button>
-    </a>
-    <a href="/about">
-        <button>About Us</button>
-    </a>
-    <a href="/">
-        <button>Home</button>
-    </a>
-</body>
+{% block content %}
+<h1>About Us</h1>
+<p>We are dedicated to providing top-notch construction, renovation, and maintenance services to our clients. Our team
+    of experts ensures that every project is completed with the highest standards of quality and professionalism.</p>
+<p>Our mission is to deliver exceptional results while maintaining strong relationships with our clients, ensuring their
+    satisfaction and trust in our services.</p>
+<p>We believe in continuous improvement and innovation, constantly seeking new ways to enhance our services and exceed
+    client expectations.</p>
+<p>Thank you for visiting our website. We look forward to working with you and helping you achieve your construction,
+    renovation, and maintenance goals.</p>
+<h1>Our Employees</h1>
+<ul>
+    {% for abou in about %}
 
-</html>
+    {% if abou.salary > 2000 %} <h2>Name: {{ abou.name }}</h2>
+
+    <p>Position: {{ abou.position }}</p>
+    <p>Age: {{ abou.age }}</p>
+
+    <p>Salary: ${{ abou.salary }} per hour</p>
+
+    <hr>
+    {% endif %}
+    {% endfor %}
+</ul>
+{% endblock %}
