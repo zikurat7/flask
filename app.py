@@ -2,6 +2,7 @@ import os
 import sqlite3
 from functools import wraps
 
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, redirect, url_for, session
 from werkzeug.security import check_password_hash
@@ -67,10 +68,11 @@ def login():
         ):
 
             session["logged_in"] = True
-
+            flash("Successfully logged in!", "success")
             return redirect(url_for("admin_messages"))
 
-        return "Invalid username or password", 401
+        flash("Invalid username or password", "error")
+        return render_template("login.html"), 401
 
     return render_template("login.html")
 
@@ -163,7 +165,7 @@ def delete_message(message_id):
 
     connection.commit()
     connection.close()
-
+    flash("Message successfully deleted!", "success")
     return redirect(url_for("admin_messages"))
 
 
@@ -195,7 +197,7 @@ def edit_message(message_id):
 
         connection.commit()
         connection.close()
-
+        flash("Message successfully updated!", "success")
         return redirect(url_for("admin_messages"))
 
     message = connection.execute(
@@ -220,7 +222,7 @@ def index():
 def logout():
 
     session.clear()
-
+    flash("Successfully logged out!", "success")
     return redirect(url_for("login"))
 
 
