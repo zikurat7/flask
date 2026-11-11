@@ -2,29 +2,43 @@ import os
 import sqlite3
 from functools import wraps
 
-from flask import jsonify
-from flask import Flask, render_template, request, redirect, url_for, session, flash
 from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import (
+    Flask,
+    render_template,
+    request,
+    redirect,
+    url_for,
+    session,
+    flash,
+)
 from werkzeug.security import check_password_hash
 
+from routes.api import api_bp
+
+# Load environment variables
 load_dotenv()
 
+# Create Flask application
 app = Flask(__name__)
 
+# Configure secret key
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
+# Register API Blueprint
+app.register_blueprint(api_bp, url_prefix="/api")
+
+# Admin credentials
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH")
 
+# Website variables
 user = "Valerii"
 age = 28
 prof = "Engineer"
 
 
-app = Flask(__name__)
-
-app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+# Keep your existing init_db() and all routes below
 
 
 def init_db():
@@ -54,20 +68,6 @@ def login_required(function):
         return function(*args, **kwargs)
 
     return wrapper
-
-
-@app.route("/api/employees")
-def api_employees():
-
-    employees = [
-        {"name": "Alex", "age": 30, "position": "Developer", "salary": 3300},
-        {"name": "Mike", "age": 25, "position": "Designer", "salary": 2800},
-        {"name": "John", "age": 40, "position": "Manager", "salary": 3600},
-        {"name": "Sarah", "age": 28, "position": "Consultant", "salary": 2900},
-        {"name": "Emma", "age": 32, "position": "Architect", "salary": 3400},
-    ]
-
-    return jsonify(employees)
 
 
 @app.route("/admin/login", methods=["GET", "POST"])

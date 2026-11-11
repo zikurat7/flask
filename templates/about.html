@@ -5,18 +5,24 @@ About | My Website
 {% endblock %}
 
 {% block content %}
+
 <h1>About Us</h1>
+
 <p>We are dedicated to providing top-notch construction, renovation, and maintenance services to our clients. Our team
     of experts ensures that every project is completed with the highest standards of quality and professionalism.</p>
+
 <p>Our mission is to deliver exceptional results while maintaining strong relationships with our clients, ensuring their
     satisfaction and trust in our services.</p>
+
 <p>We believe in continuous improvement and innovation, constantly seeking new ways to enhance our services and exceed
     client expectations.</p>
+
 <p>Thank you for visiting our website. We look forward to working with you and helping you achieve your construction,
     renovation, and maintenance goals.</p>
+
 <h1>Our Job Positions</h1>
 
-
+<!-- Server-rendered employee cards -->
 <div class="employees-grid">
 
     {% for abou in about %}
@@ -41,10 +47,34 @@ About | My Website
 
     {% endfor %}
 
-</div>
-<h1>JavaScript Employee Directory</h1>
+</div> <!-- IMPORTANT: Close employees-grid here -->
 
+
+<!-- Filter buttons -->
+<div class="employee-actions">
+
+    <button id="high-salary-button">
+        Show Employees Earning More Than $3000
+    </button>
+
+    <button id="reset-employees-button">
+        Show All Employees
+    </button>
+
+    <button id="sort-salary-button">
+        Sort by Salary (Highest First)
+    </button>
+
+    <button id="average-salary-button">
+        Calculate Average Salary
+    </button>
+
+</div>
+<div id="average-salary-result"></div>
+
+<!-- Employee search -->
 <div class="employee-search">
+
     <h2>Find an Employee by Name</h2>
 
     <input type="text" id="employee-search-input" placeholder="Enter employee name...">
@@ -52,7 +82,33 @@ About | My Website
     <button id="employee-search-button">Search</button>
 
     <div id="employee-search-result"></div>
+
 </div>
 
+
+<!-- JavaScript employee directory -->
 <div id="js-employees" class="employees-grid"></div>
+
+<h2>Add New Employee</h2>
+
+<form id="add-employee-form">
+
+    <label for="new-employee-name">Name:</label>
+    <input type="text" id="new-employee-name" required>
+
+    <label for="new-employee-age">Age:</label>
+    <input type="number" id="new-employee-age" min="1" required>
+
+    <label for="new-employee-position">Position:</label>
+    <input type="text" id="new-employee-position" required>
+
+    <label for="new-employee-salary">Salary:</label>
+    <input type="number" id="new-employee-salary" min="0" step="0.01" required>
+
+    <button type="submit">Add Employee</button>
+
+</form>
+
+<p id="add-employee-result"></p>
+
 {% endblock %}

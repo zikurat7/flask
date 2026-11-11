@@ -357,3 +357,28 @@ button:hover {
 #employee-search-result {
     margin-top: 20px;
 }
+
+#high-salary-button {
+    display: block;
+    margin: 10px auto;
+    font-size: 16px;
+}
+
+#reset-employees-button {
+    display: block;
+    margin: 10px auto;
+    font-size: 16px;
+}
+
+
+#sort-salary-button {
+    display: block;
+    margin: 10px auto;
+    font-size: 16px;
+}
+
+#average-salary-button {
+    display: block;
+    margin: 10px auto;
+    font-size: 16px;
+}
