@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Message | My Website
+{% endblock %}
+
+{% block content %}
+
+<h1>Edit Message #{{ message["id"] }}</h1>
+
+<form method="POST">
+
+    <label>Name:</label>
+    <input type="text" name="name" value="{{ message['name'] }}" required>
+
+    <br><br>
+
+    <label>Email:</label>
+    <input type="email" name="email" value="{{ message['email'] }}" required>
+
+    <br><br>
+
+    <label>Message:</label>
+    <textarea name="message" required>{{ message["message"] }}</textarea>
+
+    <br><br>
+
+    <button type="submit">Save Changes</button>
+
+</form>
+
+<a href="{{ url_for('admin_messages') }}">Back to Messages</a>
+
+{% endblock %}

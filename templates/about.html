@@ -16,17 +16,18 @@ About | My Website
     renovation, and maintenance goals.</p>
 <h1>Our Employees</h1>
 <ul>
+
     {% for abou in about %}
-
-    {% if abou.salary > 2000 %} <h2>Name: {{ abou.name }}</h2>
-
     <p>Position: {{ abou.position }}</p>
     <p>Age: {{ abou.age }}</p>
-
     <p>Salary: ${{ abou.salary }} per hour</p>
 
-    <hr>
+    {% if abou.salary > 2999 %}
+    <p>High salary employee</p>
+    {% else %}
+    <p>Standard salary employee</p>
     {% endif %}
+    <hr>
     {% endfor %}
 </ul>
 {% endblock %}
