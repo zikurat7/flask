@@ -27,8 +27,8 @@ Edit Message | My Website
 
     <button type="submit">Save Changes</button>
 
-</form>
+    <button onclick="window.location.href='{{ url_for('admin_messages') }}'">Back to Messages</button>
 
-<button onclick="window.location.href='{{ url_for('admin_messages') }}'">Back to Messages</button>
+</form>
 
 {% endblock %}

@@ -1,0 +1,113 @@
+/* LIGHT MODE */
+:root {
+    --bg-color: #F3F4F6;
+    --surface-color: #FFFFFF;
+    --text-color: #1F2937;
+    --secondary-text: #6B7280;
+    --nav-color: #1F2937;
+    --border-color: #E5E7EB;
+    --primary-color: #F97316;
+    --primary-hover: #EA580C;
+}
+
+/* DARK MODE */
+[data-theme="dark"] {
+    --bg-color: #111827;
+    --surface-color: #1F2937;
+    --text-color: #F9FAFB;
+    --secondary-text: #9CA3AF;
+    --nav-color: #030712;
+    --border-color: #374151;
+    --primary-color: #FB923C;
+    --primary-hover: #F97316;
+}
+
+
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+nav {
+    background-color: var(--nav-color);
+    padding: 20px;
+}
+
+nav a {
+    color: #FFFFFF;
+    text-decoration: none;
+    margin-right: 20px;
+    transition: color 0.2s;
+}
+
+nav a:hover {
+    color: var(--primary-color);
+}
+
+nav a,
+nav a:visited {
+    color: #FFFFFF;
+}
+
+main {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 25px;
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+
+h1,
+h2,
+h3 {
+    color: var(--text-color);
+}
+
+p {
+    color: var(--secondary-text);
+}
+
+button {
+    background-color: var(--primary-color);
+    color: #FFFFFF;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: var(--primary-hover);
+}
+
+input,
+textarea {
+    background-color: var(--surface-color);
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+#theme-toggle {
+    background-color: #FFFFFF;
+    color: #1F2937;
+    border: 1px solid #D1D5DB;
+}
+
+#theme-toggle:hover {
+    background-color: #F97316;
+    color: #FFFFFF;
+    border-color: #F97316;
+}

@@ -26,11 +26,10 @@ Admin Messages | My Website
 
         <button type="submit">Delete Message</button>
 
+        <a href="{{ url_for('edit_message', message_id=message['id']) }}">
+            <button type="button">Edit Message</button>
+        </a>
     </form>
-
-    <a href="{{ url_for('edit_message', message_id=message['id']) }}">
-        <button type="button">Edit Message</button>
-    </a>
 
     <hr>
 </div>
