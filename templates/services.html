@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Zikurat's Website</title>
+</head>
+
+<body>
+    <p>This is the list of services we provide.</p>
+    <ul>
+        {% for service in services %}
+        <li>{{ service }}</li>
+        {% endfor %}
+    </ul>
+    <p>List of buttons for navigation:</p>
+    <style>
+        .my-button {
+            background-color: red;
+            color: white;
+            padding: 4px 14px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-right: 16px;
+        }
+    </style>
+
+    <a href="{{ url_for('home') }}" class="my-button">
+        Home
+    </a>
+
+    <a href="{{ url_for('services') }}" class="my-button">
+        Services
+    </a>
+
+    <a href="{{ url_for('about') }}" class="my-button">
+        About
+    </a>
+
+    <a href="{{ url_for('contact') }}" class="my-button">
+        Contact
+    </a>
+</body>
+
+</html>
