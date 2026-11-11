@@ -14,7 +14,7 @@ About | My Website
     client expectations.</p>
 <p>Thank you for visiting our website. We look forward to working with you and helping you achieve your construction,
     renovation, and maintenance goals.</p>
-<h1>Our Employees</h1>
+<h1>Our Job Positions</h1>
 
 
 <div class="employees-grid">
@@ -42,5 +42,17 @@ About | My Website
     {% endfor %}
 
 </div>
+<h1>JavaScript Employee Directory</h1>
 
+<div class="employee-search">
+    <h2>Find an Employee by Name</h2>
+
+    <input type="text" id="employee-search-input" placeholder="Enter employee name...">
+
+    <button id="employee-search-button">Search</button>
+
+    <div id="employee-search-result"></div>
+</div>
+
+<div id="js-employees" class="employees-grid"></div>
 {% endblock %}

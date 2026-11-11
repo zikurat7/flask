@@ -8,25 +8,29 @@ Contact | My Website
 
 <h1>Hello, {{ user }}! Welcome to the contact page of Zikurat's Website!</h1>
 <p>If you want to get in touch with us, please use the contact form below:</p>
-<form method="POST" action="{{ url_for('contact') }}">
+
+<form method="POST" action="{{ url_for('contact') }}" id="contact-form">
 
     <label>Your Name:</label>
-    <input type="text" name="name" required>
+    <input type="text" name="name" id="name" required>
 
     <br><br>
 
     <label>Your Email:</label>
-    <input type="email" name="email" required>
+    <input type="email" name="email" id="email" required>
 
     <br><br>
 
     <label>Your Message:</label>
-    <textarea name="message" required></textarea>
+    <textarea name="message" id="message" required></textarea>
 
     <br><br>
 
     <button type="submit">Send Message</button>
 
+    <p id="form-error"></p>
+
 </form>
+
 
 {% endblock %}
