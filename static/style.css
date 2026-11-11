@@ -297,3 +297,33 @@ button:hover {
         grid-template-columns: 1fr;
     }
 }
+
+/* Click Counter */
+
+.counter-section {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: center;
+
+    text-align: center;
+
+    max-width: 500px;
+    margin: 60px auto;
+    padding: 40px;
+
+    background-color: var(--surface-color);
+    color: var(--text-color);
+
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+}
+
+.counter-section h2 {
+    color: var(--primary-color);
+}
+
+.counter-section button {
+    margin-top: 15px;
+}

@@ -32,3 +32,28 @@ themeButton.addEventListener("click", function () {
 
     updateThemeButton();
 });
+
+// Click Counter
+
+let count = 0;
+
+const counterButton = document.getElementById("counter-button");
+const counterDisplay = document.getElementById("counter");
+const resetButton = document.getElementById("reset-button");
+
+if (counterButton && counterDisplay) {
+
+    // Increase counter
+    counterButton.addEventListener("click", function () {
+        count++;
+        counterDisplay.textContent = count;
+    });
+
+    // Reset counter
+    if (resetButton) {
+        resetButton.addEventListener("click", function () {
+            count = 0;
+            counterDisplay.textContent = count;
+        });
+    }
+}
