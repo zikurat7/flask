@@ -2,6 +2,18 @@
 
 A Flask-based web application featuring a personal portfolio website with an admin panel for managing contact messages.
 
+### Homepage
+![Homepage](pics/pic1.png)
+
+### Dashboard
+![Dashboard](pics/pic2.png)
+
+### API Example
+![API Example](pics/pic3.png)
+
+### API Example
+![API Example](pics/pic4.png)
+
 ## Features
 
 - 🏠 **Home Page**: Personal introduction with user profile
@@ -42,7 +54,7 @@ cp .env.example .env     # then set SECRET_KEY and ADMIN_PASSWORD_HASH
 docker compose up --build
 ```
 
-The app is available at `http://localhost:5431`. PostgreSQL runs in the `db`
+The app is available at `http://localhost:8000`. PostgreSQL runs in the `db`
 service, its data is kept in the `pgdata` volume, and the `messages` and `employees`
 tables are created automatically on startup. The database is also published on
 `127.0.0.1:5433` (change with `POSTGRES_PORT`).
@@ -94,7 +106,7 @@ cp .env.example .env
 python app.py
 ```
 
-The application will start on `http://localhost:5431`
+The application will start on `http://localhost:8000`
 
 ## Project Structure
 

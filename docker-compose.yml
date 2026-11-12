@@ -21,7 +21,7 @@ services:
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-flask}:${POSTGRES_PASSWORD:-flask}@db:5432/${POSTGRES_DB:-flask}
     ports:
-      - "5431:5431"
+      - "8000:8000"
     depends_on:
       db:
         condition: service_healthy
