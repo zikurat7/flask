@@ -1,10 +1,11 @@
 
 import { initTheme } from "./js/theme.js";
-import { initEmployees } from "./js/employees.js";
+import { initEmployees, initAddEmployee } from "./js/employees.js";
 
 // Initialize modules
 initTheme();
 initEmployees();
+initAddEmployee();
 
 
 // ==========================

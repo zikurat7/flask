@@ -9,10 +9,10 @@ A Flask-based web application featuring a personal portfolio website with an adm
 ![Admin Login](pics/pic2.png)
 
 ### Admin Page
-![Admin Page](pics/pic3.png)
+![Admin Page](pics/pic5.png)
 
 ### About Page
-![About Page](pics/pic4.png)
+![About Page](pics/pic6.png)
 
 ## Features
 

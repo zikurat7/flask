@@ -213,7 +213,25 @@ class TestEmployees:
         assert employees[0]["name"] == "Alex"
         assert employees[0]["salary"] == 3300
 
+    def test_about_has_no_add_employee_form(self, client):
+        assert b"add-employee-form" not in client.get("/about").data
+
+    def test_admin_messages_has_add_employee_form(self, client):
+        with client.session_transaction() as sess:
+            sess["logged_in"] = True
+        assert b"add-employee-form" in client.get("/admin/messages").data
+
+    def test_api_add_employee_requires_login(self, client):
+        response = client.post(
+            "/api/employees",
+            json={"name": "Zoe", "age": 27, "position": "Tester", "salary": 3100.5},
+        )
+        assert response.status_code == 401
+        assert len(client.get("/api/employees").get_json()) == 5
+
     def test_api_add_employee_persists(self, client):
+        with client.session_transaction() as sess:
+            sess["logged_in"] = True
         response = client.post(
             "/api/employees",
             json={"name": "Zoe", "age": 27, "position": "Tester", "salary": 3100.5},
@@ -232,6 +250,8 @@ class TestEmployees:
         assert len(client.get("/api/employees").get_json()) == 6
 
     def test_api_add_employee_invalid(self, client):
+        with client.session_transaction() as sess:
+            sess["logged_in"] = True
         response = client.post(
             "/api/employees",
             json={"name": "", "age": 27, "position": "Tester", "salary": 100},

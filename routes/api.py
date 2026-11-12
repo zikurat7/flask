@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, session
 
 from db import get_db
 
@@ -31,6 +31,9 @@ def api_employees():
 
 @api_bp.route("/employees", methods=["POST"])
 def add_employee():
+
+    if not session.get("logged_in"):
+        return jsonify({"error": "Authentication required"}), 401
 
     data = request.get_json(silent=True)
 

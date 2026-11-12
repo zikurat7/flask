@@ -41,6 +41,29 @@ Admin Messages | My Website
 <p>No messages found.</p>
 
 {% endif %}
+
+<h2>Add New Employee</h2>
+
+<form id="add-employee-form">
+
+    <label for="new-employee-name">Name:</label>
+    <input type="text" id="new-employee-name" required>
+
+    <label for="new-employee-age">Age:</label>
+    <input type="number" id="new-employee-age" min="1" required>
+
+    <label for="new-employee-position">Position:</label>
+    <input type="text" id="new-employee-position" required>
+
+    <label for="new-employee-salary">Salary:</label>
+    <input type="number" id="new-employee-salary" min="0" step="0.01" required>
+
+    <button type="submit">Add Employee</button>
+
+</form>
+
+<p id="add-employee-result"></p>
+
 <form method="POST" action="{{ url_for('logout') }}">
     <button type="submit">Logout</button>
 </form>

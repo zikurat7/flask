@@ -130,59 +130,55 @@ export async function initEmployees() {
         console.error("Employee loading error:", error);
     }
 
+}
 
-    // Add new employee form
+
+// Add new employee form (admin page)
+export function initAddEmployee() {
+
     const addEmployeeForm = document.getElementById("add-employee-form");
     const addEmployeeResult = document.getElementById("add-employee-result");
 
-    if (addEmployeeForm && addEmployeeResult) {
+    if (!addEmployeeForm || !addEmployeeResult) return;
 
-        addEmployeeForm.addEventListener("submit", async function (event) {
+    addEmployeeForm.addEventListener("submit", async function (event) {
 
-            event.preventDefault();
+        event.preventDefault();
 
-            const name = document.getElementById("new-employee-name").value.trim();
-            const age = Number(document.getElementById("new-employee-age").value);
-            const position = document.getElementById("new-employee-position").value.trim();
-            const salary = Number(document.getElementById("new-employee-salary").value);
+        const name = document.getElementById("new-employee-name").value.trim();
+        const age = Number(document.getElementById("new-employee-age").value);
+        const position = document.getElementById("new-employee-position").value.trim();
+        const salary = Number(document.getElementById("new-employee-salary").value);
 
-            const newEmployee = {
-                name: name,
-                age: age,
-                position: position,
-                salary: salary
-            };
+        const newEmployee = {
+            name: name,
+            age: age,
+            position: position,
+            salary: salary
+        };
 
-            try {
-                const response = await fetch("/api/employees", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(newEmployee)
-                });
+        try {
+            const response = await fetch("/api/employees", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(newEmployee)
+            });
 
-                const result = await response.json();
+            const result = await response.json();
 
-                if (!response.ok) {
-                    throw new Error(result.error || "Failed to add employee");
-                }
-
-                addEmployeeResult.textContent = result.message;
-
-                // Add the employee to the local array
-                employees.push(result.employee);
-
-                // Update employee directory
-                displayEmployees(employees);
-
-                // Clear the form
-                addEmployeeForm.reset();
-
-            } catch (error) {
-                addEmployeeResult.textContent = error.message;
+            if (!response.ok) {
+                throw new Error(result.error || "Failed to add employee");
             }
-        });
-    }
-    // close initEmployees function
+
+            addEmployeeResult.textContent = result.message;
+
+            // Clear the form
+            addEmployeeForm.reset();
+
+        } catch (error) {
+            addEmployeeResult.textContent = error.message;
+        }
+    });
 }
