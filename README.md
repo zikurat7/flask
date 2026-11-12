@@ -2,17 +2,17 @@
 
 A Flask-based web application featuring a personal portfolio website with an admin panel for managing contact messages.
 
-### Homepage
-![Homepage](pics/pic1.png)
+### Contact form
+![Contact form](pics/pic1.png)
 
-### Dashboard
-![Dashboard](pics/pic2.png)
+### Admin Login
+![Admin Login](pics/pic2.png)
 
-### API Example
-![API Example](pics/pic3.png)
+### Admin Page
+![Admin Page](pics/pic3.png)
 
-### API Example
-![API Example](pics/pic4.png)
+### About Page
+![About Page](pics/pic4.png)
 
 ## Features
 
