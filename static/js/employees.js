@@ -14,6 +14,13 @@ export async function initEmployees() {
     const averageSalaryButton = document.getElementById("average-salary-button");
     const averageSalaryResult = document.getElementById("average-salary-result");
 
+    // Employee data comes from the database, so escape it before using innerHTML
+    function escapeHtml(value) {
+        const div = document.createElement("div");
+        div.textContent = value;
+        return div.innerHTML;
+    }
+
     function displayEmployees(employeeList) {
 
         if (!employeeContainer) return;
@@ -24,9 +31,9 @@ export async function initEmployees() {
 
             employeeContainer.innerHTML += `
                 <div class="employee-card">
-                    <h2>${employee.name}</h2>
+                    <h2>${escapeHtml(employee.name)}</h2>
                     <p>Age: ${employee.age}</p>
-                    <p>Position: ${employee.position}</p>
+                    <p>Position: ${escapeHtml(employee.position)}</p>
                     <p>Salary: $${employee.salary} per hour</p>
                 </div>
             `;

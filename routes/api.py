@@ -1,19 +1,32 @@
 from flask import Blueprint, jsonify, request
 
+from db import get_db
+
 api_bp = Blueprint("api", __name__)
+
+
+def _employee_dict(row):
+    """Convert a database row to a JSON-friendly dict (NUMERIC -> int/float)."""
+    salary = row["salary"]
+    return {
+        "id": row["id"],
+        "name": row["name"],
+        "age": row["age"],
+        "position": row["position"],
+        "salary": int(salary) if salary == salary.to_integral_value() else float(salary),
+    }
+
+
+def fetch_employees():
+    with get_db() as connection:
+        rows = connection.execute("SELECT * FROM employees ORDER BY id").fetchall()
+
+    return [_employee_dict(row) for row in rows]
 
 
 @api_bp.route("/employees", methods=["GET"])
 def api_employees():
-    employees = [
-        {"name": "Alex", "age": 30, "position": "Developer", "salary": 3300},
-        {"name": "Mike", "age": 25, "position": "Designer", "salary": 2800},
-        {"name": "John", "age": 40, "position": "Manager", "salary": 3600},
-        {"name": "Sarah", "age": 28, "position": "Consultant", "salary": 2900},
-        {"name": "Emma", "age": 32, "position": "Architect", "salary": 3400},
-    ]
-
-    return jsonify(employees)
+    return jsonify(fetch_employees())
 
 
 @api_bp.route("/employees", methods=["POST"])
@@ -41,14 +54,22 @@ def add_employee():
     if type(salary) not in (int, float) or salary < 0:
         return jsonify({"error": "Salary must be a non-negative number"}), 400
 
-    employee = {
-        "name": name.strip(),
-        "age": age,
-        "position": position.strip(),
-        "salary": salary,
-    }
+    with get_db() as connection:
+        row = connection.execute(
+            """
+            INSERT INTO employees (name, age, position, salary)
+            VALUES (%s, %s, %s, %s)
+            RETURNING *
+            """,
+            (name.strip(), age, position.strip(), salary),
+        ).fetchone()
 
     return (
-        jsonify({"message": "Employee received successfully", "employee": employee}),
+        jsonify(
+            {
+                "message": "Employee added successfully",
+                "employee": _employee_dict(row),
+            }
+        ),
         201,
     )

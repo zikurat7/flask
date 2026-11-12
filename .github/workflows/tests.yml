@@ -9,6 +9,23 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      SECRET_KEY: ci-secret-key
+      DATABASE_URL: postgresql://flask:flask@localhost:5432/flask
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          POSTGRES_USER: flask
+          POSTGRES_PASSWORD: flask
+          POSTGRES_DB: flask
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U flask -d flask"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
     strategy:
       matrix:
         python-version: ['3.14', '3.12', '3.11']

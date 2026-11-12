@@ -1,25 +1,19 @@
-import os
-import sqlite3
-import tempfile
 import pytest
-from app import app, init_db
-from werkzeug.security import generate_password_hash
+from app import app, get_db, init_db
 
 
 @pytest.fixture
 def client():
-    """Create a test client with a temporary database."""
-    db_fd, db_path = tempfile.mkstemp()
+    """Create a test client backed by an empty messages table."""
     app.config["TESTING"] = True
-    app.config["DATABASE"] = db_path
     app.config["SECRET_KEY"] = "test-secret-key"
 
     with app.app_context():
         init_db()
+        with get_db() as connection:
+            connection.execute("TRUNCATE messages, employees RESTART IDENTITY")
+        init_db()  # re-seed the default employees
         yield app.test_client()
-
-    os.close(db_fd)
-    os.unlink(db_path)
 
 
 class TestHomeRoutes:
@@ -175,14 +169,11 @@ class TestDatabase:
 
     def test_database_initialization(self, client):
         """Test that database is properly initialized."""
-        connection = sqlite3.connect("messages.db")
-        cursor = connection.cursor()
-        cursor.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='messages'"
-        )
-        result = cursor.fetchone()
-        connection.close()
-        assert result is not None
+        with get_db() as connection:
+            result = connection.execute(
+                "SELECT to_regclass('public.messages') AS tbl"
+            ).fetchone()
+        assert result["tbl"] is not None
 
     def test_message_storage_and_retrieval(self, client):
         """Test storing and retrieving messages from database."""
@@ -195,17 +186,58 @@ class TestDatabase:
             },
         )
 
-        connection = sqlite3.connect("messages.db")
-        connection.row_factory = sqlite3.Row
-        cursor = connection.cursor()
-        cursor.execute("SELECT * FROM messages WHERE email = ?", ("test@example.com",))
-        result = cursor.fetchone()
-        connection.close()
+        with get_db() as connection:
+            result = connection.execute(
+                "SELECT * FROM messages WHERE email = %s", ("test@example.com",)
+            ).fetchone()
 
         assert result is not None
         assert result["name"] == "Test User"
         assert result["email"] == "test@example.com"
         assert result["message"] == "Test message content"
+
+
+class TestEmployees:
+    """Test employees stored in PostgreSQL."""
+
+    def test_about_lists_seeded_employees(self, client):
+        response = client.get("/about")
+        assert b"Developer" in response.data
+        assert b"Architect" in response.data
+
+    def test_api_get_employees(self, client):
+        response = client.get("/api/employees")
+        assert response.status_code == 200
+        employees = response.get_json()
+        assert len(employees) == 5
+        assert employees[0]["name"] == "Alex"
+        assert employees[0]["salary"] == 3300
+
+    def test_api_add_employee_persists(self, client):
+        response = client.post(
+            "/api/employees",
+            json={"name": "Zoe", "age": 27, "position": "Tester", "salary": 3100.5},
+        )
+        assert response.status_code == 201
+        assert response.get_json()["employee"]["id"] is not None
+
+        with get_db() as connection:
+            row = connection.execute(
+                "SELECT * FROM employees WHERE name = %s", ("Zoe",)
+            ).fetchone()
+        assert row is not None
+        assert row["position"] == "Tester"
+
+        assert b"Tester" in client.get("/about").data
+        assert len(client.get("/api/employees").get_json()) == 6
+
+    def test_api_add_employee_invalid(self, client):
+        response = client.post(
+            "/api/employees",
+            json={"name": "", "age": 27, "position": "Tester", "salary": 100},
+        )
+        assert response.status_code == 400
+        assert len(client.get("/api/employees").get_json()) == 5
 
 
 class TestFlaskConfiguration:

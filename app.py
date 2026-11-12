@@ -1,5 +1,4 @@
 import os
-import sqlite3
 from functools import wraps
 
 from dotenv import load_dotenv
@@ -14,7 +13,8 @@ from flask import (
 )
 from werkzeug.security import check_password_hash
 
-from routes.api import api_bp
+from db import get_db
+from routes.api import api_bp, fetch_employees
 
 # Load environment variables
 load_dotenv()
@@ -32,29 +32,53 @@ app.register_blueprint(api_bp, url_prefix="/api")
 ADMIN_USERNAME = os.getenv("ADMIN_USERNAME")
 ADMIN_PASSWORD_HASH = os.getenv("ADMIN_PASSWORD_HASH")
 
+# Employees inserted on first startup
+SEED_EMPLOYEES = [
+    ("Alex", 30, "Developer", 3300),
+    ("Mike", 25, "Designer", 2800),
+    ("John", 40, "Manager", 3600),
+    ("Sarah", 28, "Consultant", 2900),
+    ("Emma", 32, "Architect", 3400),
+]
+
 # Website variables
 user = "Valerii"
 age = 28
 prof = "Engineer"
 
 
-# Keep your existing init_db() and all routes below
-
-
 def init_db():
-    connection = sqlite3.connect("messages.db")
+    with get_db() as connection:
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS messages (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                message TEXT NOT NULL
+            )
+        """)
 
-    connection.execute("""
-        CREATE TABLE IF NOT EXISTS messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            email TEXT NOT NULL,
-            message TEXT NOT NULL
-        )
-    """)
+        connection.execute("""
+            CREATE TABLE IF NOT EXISTS employees (
+                id SERIAL PRIMARY KEY,
+                name TEXT NOT NULL,
+                age INTEGER NOT NULL CHECK (age > 0),
+                position TEXT NOT NULL,
+                salary NUMERIC(10, 2) NOT NULL CHECK (salary >= 0)
+            )
+        """)
 
-    connection.commit()
-    connection.close()
+        # Seed the initial team only when the table is empty
+        count = connection.execute("SELECT COUNT(*) AS n FROM employees").fetchone()
+        if count["n"] == 0:
+            with connection.cursor() as cursor:
+                cursor.executemany(
+                    """
+                    INSERT INTO employees (name, age, position, salary)
+                    VALUES (%s, %s, %s, %s)
+                    """,
+                    SEED_EMPLOYEES,
+                )
 
 
 def login_required(function):
@@ -99,38 +123,7 @@ def home():
 
 @app.route("/about")
 def about():
-    about_list = [
-        {
-            "name": "Alex",
-            "age": 30,
-            "position": "Developer",
-            "salary": 3300,
-        },
-        {
-            "name": "Mike",
-            "age": 25,
-            "position": "Designer",
-            "salary": 2800,
-        },
-        {
-            "name": "John",
-            "age": 40,
-            "position": "Manager",
-            "salary": 3600,
-        },
-        {
-            "name": "Sarah",
-            "age": 28,
-            "position": "Consultant",
-            "salary": 2900,
-        },
-        {
-            "name": "Emma",
-            "age": 32,
-            "position": "Architect",
-            "salary": 3400,
-        },
-    ]
+    about_list = fetch_employees()
     return render_template("about.html", user=user, prof=prof, about=about_list)
 
 
@@ -146,21 +139,14 @@ def contact():
         if not name or not email or not message:
             return "Please fill in all fields.", 400
 
-        connection = sqlite3.connect("messages.db")
-
-        try:
+        with get_db() as connection:
             connection.execute(
                 """
                 INSERT INTO messages (name, email, message)
-                VALUES (?, ?, ?)
+                VALUES (%s, %s, %s)
                 """,
                 (name, email, message),
             )
-
-            connection.commit()
-
-        finally:
-            connection.close()
 
         return render_template("contact_success.html", name=name)
 
@@ -171,13 +157,10 @@ def contact():
 @login_required
 def admin_messages():
 
-    connection = sqlite3.connect("messages.db")
-
-    connection.row_factory = sqlite3.Row
-
-    messages = connection.execute("SELECT * FROM messages ORDER BY id DESC").fetchall()
-
-    connection.close()
+    with get_db() as connection:
+        messages = connection.execute(
+            "SELECT * FROM messages ORDER BY id DESC"
+        ).fetchall()
 
     return render_template("admin_messages.html", messages=messages)
 
@@ -186,12 +169,9 @@ def admin_messages():
 @login_required
 def delete_message(message_id):
 
-    connection = sqlite3.connect("messages.db")
+    with get_db() as connection:
+        connection.execute("DELETE FROM messages WHERE id = %s", (message_id,))
 
-    connection.execute("DELETE FROM messages WHERE id = ?", (message_id,))
-
-    connection.commit()
-    connection.close()
     flash("Message successfully deleted!", "success")
     return redirect(url_for("admin_messages"))
 
@@ -200,9 +180,6 @@ def delete_message(message_id):
 @login_required
 def edit_message(message_id):
 
-    connection = sqlite3.connect("messages.db")
-    connection.row_factory = sqlite3.Row
-
     if request.method == "POST":
 
         name = request.form.get("name", "").strip()
@@ -210,28 +187,25 @@ def edit_message(message_id):
         message = request.form.get("message", "").strip()
 
         if not name or not email or not message:
-            connection.close()
             return "All fields are required.", 400
 
-        connection.execute(
-            """
-            UPDATE messages
-            SET name = ?, email = ?, message = ?
-            WHERE id = ?
-            """,
-            (name, email, message, message_id),
-        )
+        with get_db() as connection:
+            connection.execute(
+                """
+                UPDATE messages
+                SET name = %s, email = %s, message = %s
+                WHERE id = %s
+                """,
+                (name, email, message, message_id),
+            )
 
-        connection.commit()
-        connection.close()
         flash("Message successfully updated!", "success")
         return redirect(url_for("admin_messages"))
 
-    message = connection.execute(
-        "SELECT * FROM messages WHERE id = ?", (message_id,)
-    ).fetchone()
-
-    connection.close()
+    with get_db() as connection:
+        message = connection.execute(
+            "SELECT * FROM messages WHERE id = %s", (message_id,)
+        ).fetchone()
 
     if message is None:
         return "Message not found", 404
