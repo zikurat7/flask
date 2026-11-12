@@ -201,15 +201,3 @@ API routes are registered under the `/api` prefix.
 
 - `GET /api/employees` - List all employees from the database
 - `POST /api/employees` - Add an employee (JSON: `name`, `age`, `position`, `salary`); returns `201` with the saved employee
-
-## License
-
-MIT
-
-## Author
-
-Created by Valerii (Engineer)
-
----
-
-For issues or contributions, please submit a pull request or open an issue.
